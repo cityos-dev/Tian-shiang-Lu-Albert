@@ -1,1 +1,18 @@
 version: "3.8"
+services:
+  video_server:
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - 80
+  mongo:
+    image: mongo:6.0.4
+  swagger:
+    image: swaggerapi/swagger-ui:v4.15.5
+    ports:
+      - "80:8080"
+    volumes:
+      - .:/usr/share/nginx/html/doc
+    environment:
+      API_URL: doc/api.yaml
