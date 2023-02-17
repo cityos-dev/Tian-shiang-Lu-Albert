@@ -1,4 +1,4 @@
 class Video():
-    def __init__(self, name: str, file: bin):
+    def __init__(self, name: str, content: bin):
         self.name = name
-        self.file = file
+        self.content = content
