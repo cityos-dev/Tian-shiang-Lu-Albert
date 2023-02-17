@@ -4,7 +4,7 @@ from .base import RepositoryError
 class VideoNotFoundError(RepositoryError):
 
     def __init__(self, name: str):
-        super("Couldn't find video `%s`".format(name))
+        super(VideoNotFoundError, self).__init__("Couldn't find video `%s`".format(name))
         self._name = name
 
     def get_video_name(self) -> str:
@@ -14,7 +14,7 @@ class VideoNotFoundError(RepositoryError):
 class VideoExistsError(RepositoryError):
 
     def __init__(self, name: str):
-        super('Video `%s` already exists'.format(name))
+        super(VideoExistsError, self).__init__('Video `%s` already exists'.format(name))
         self._name = name
 
     def get_video_name(self) -> str:
