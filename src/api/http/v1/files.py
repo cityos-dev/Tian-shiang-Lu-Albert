@@ -12,7 +12,7 @@ def get_file(fileid):
     try:
         return video_repo.get(fileid)
     except VideoNotFoundError as e:
-        return "", HTTPStatus.NOT_FOUND
+        return '', HTTPStatus.NOT_FOUND
 
 
 @routes.delete('/<fileid>')
