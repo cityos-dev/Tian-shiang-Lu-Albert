@@ -1,5 +1,6 @@
 from flask import Flask
 from pymongo import MongoClient
+from waitress import serve
 
 from api.http.v1 import health, files
 
@@ -15,4 +16,4 @@ def create_video_server():
 
 if __name__ == '__main__':
     app = create_video_server()
-    app.run(port=8080)
+    serve(app, host='0.0.0.0', port=8080)
