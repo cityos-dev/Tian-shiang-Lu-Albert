@@ -20,7 +20,7 @@ def get_file(fileid):
 
         response.headers = {
             'Content-Type': get_content_type(video),
-            'Content-Disposition': 'attachment; filename='.format(video.name)
+            'Content-Disposition': 'attachment; filename="{}"'.format(video.name)
         }
         return response
     except VideoNotFoundError as err:
