@@ -51,17 +51,17 @@ def upload_file():
         return '', HTTPStatus.BAD_REQUEST
 
     if 'data' not in request.files:
-        return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+        return '', HTTPStatus.BAD_REQUEST
 
     file = request.files['data']
     content = file.read()
     if len(content) == 0:
-        return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+        return '', HTTPStatus.BAD_REQUEST
 
     name = file.filename
     video_type = VideoType.from_name(name)
     if video_type is None:
-        return '', HTTPStatus.BAD_REQUEST
+        return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
 
     video = video_repo.create_video(name=name, content=content, video_type=video_type)
     response = make_response('', HTTPStatus.CREATED)
