@@ -11,7 +11,7 @@ routes = Blueprint('v1_file', __name__, url_prefix='/v1/files')
 @routes.get('/<fileid>')
 def get_file(fileid):
     try:
-        video = video_repo.get(fileid)
+        video = video_repo.get_video(fileid)
         return video.content
     except VideoNotFoundError as err:
         return '', HTTPStatus.NOT_FOUND
@@ -20,7 +20,7 @@ def get_file(fileid):
 @routes.delete('/<fileid>')
 def delete_file(fileid):
     try:
-        video_repo.delete(fileid)
+        video_repo.delete_video(fileid)
         return '', HTTPStatus.NO_CONTENT
     except VideoNotFoundError as err:
         return '', HTTPStatus.NOT_FOUND
@@ -36,7 +36,7 @@ def upload_file():
     if video_type is None:
         return '', HTTPStatus.BAD_REQUEST
 
-    fileid = video_repo.create(name=file.filename, content=file, video_type=video_type)
+    fileid = video_repo.create_video(name=file.filename, content=file, video_type=video_type)
     return {'Location': fileid}, HTTPStatus.CREATED
 
 
