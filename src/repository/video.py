@@ -3,6 +3,7 @@ from datetime import datetime
 from pymongo import MongoClient
 
 from entities import Video
+from entities.video import VideoType
 from .errors import VideoExistsError, VideoNotFoundError
 
 
@@ -11,10 +12,10 @@ class VideoRepository:
     def __init__(self, client: MongoClient):
         self.videos = client.db.videos
 
-    def create_video(self, name: str, content: bin, content_type: str):
+    def create_video(self, name: str, content: bin, content_type: VideoType):
         created_at = datetime.utcnow()
         size = len(content)
-        result = self.videos.insert_one({'name': name, 'content': content,
+        result = self.videos.insert_one({'name': name, 'content': content, 'content_type': content_type.name,
                                          'size': size, 'created_at': created_at})
         return Video(file_id=result.inserted_id, name=name, content=content,
                      size=size, content_type=content_type, created_at=created_at)
@@ -22,7 +23,7 @@ class VideoRepository:
     def list_videos(self):
         videos = self.videos.find()
         return [Video(file_id=video['_id'], name=video['name'], size=video['size'],
-                      content=video['content'], content_type=video['content_type'],
+                      content=video['content'], content_type=VideoType.from_name(video['content_type']),
                       created_at=video['created_at']) for video in videos]
 
     def delete_video(self, file_id: str):
@@ -35,5 +36,5 @@ class VideoRepository:
         if video is None:
             raise VideoNotFoundError(file_id=file_id)
         return Video(file_id=video['_id'], name=video['name'], size=video['size'],
-                     content=video['content'], content_type=video['content_type'],
+                     content=video['content'], content_type=VideoType.from_name(video['content_type']),
                      created_at=video['created_at'])
