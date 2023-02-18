@@ -14,17 +14,23 @@ def get_file(fileid):
     try:
         video = video_repo.get_video(fileid)
         response = make_response(video.content)
+        content_type = to_content_type(video.video_type)
+        if content_type is None:
+            return '', HTTPStatus.INTERNAL_SERVER_ERROR
+
         response.headers['Content-Type'] = to_content_type(video.video_type)
         return video.content
     except VideoNotFoundError as err:
         return '', HTTPStatus.NOT_FOUND
 
 
-def to_content_type(video_type: VideoType):
+def get_content_type(video: Video):
+    video_type = video.video_type
     if video_type == VideoType.MP4:
         return 'video/mp4'
     elif video_type == VideoType.MPG:
         return 'video/mpeg'
+    return None
 
 
 @routes.delete('/files/<fileid>')
