@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-routes = Blueprint('health', __name__)
+routes = Blueprint('v1_health', __name__, url_prefix='/v1/health')
 
 
-@routes.get('/v1/health')
+@routes.get('')
 def health_check():
     return ''
