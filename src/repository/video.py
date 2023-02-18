@@ -1,4 +1,4 @@
-import uuid
+from datetime import datetime
 
 from pymongo import MongoClient
 
@@ -11,25 +11,29 @@ class VideoRepository:
     def __init__(self, client: MongoClient):
         self.videos = client.db.videos
 
-    def create_video(self, content: bin):
-        name = str(uuid.uuid4())
-        result = self.videos.insert_one({'name': name, 'content': content})
-        if result.inserted_count == 0:
-            # since video name is uuid, this is an unexpected error
-            raise VideoExistsError(name=name)
-        return Video(name=name, content=content)
+    def create_video(self, name: str, content: bin, content_type: str):
+        created_at = datetime.utcnow()
+        size = len(content)
+        result = self.videos.insert_one({'name': name, 'content': content,
+                                         'size': size, 'created_at': created_at})
+        return Video(file_id=result.inserted_id, name=name, content=content,
+                     size=size, content_type=content_type, created_at=created_at)
 
     def list_videos(self):
         videos = self.videos.find()
-        return [Video(name=video['name'], content=video['content']) for video in videos]
+        return [Video(file_id=video['_id'], name=video['name'], size=video['size'],
+                      content=video['content'], content_type=video['content_type'],
+                      created_at=video['created_at']) for video in videos]
 
-    def delete_video(self, name):
-        result = self.videos.delete_one({'name': name})
+    def delete_video(self, file_id: str):
+        result = self.videos.delete_one({'_id': file_id})
         if result.deleted_count == 0:
-            raise VideoNotFoundError(name=name)
+            raise VideoNotFoundError(file_id=file_id)
 
-    def get_video(self, name):
-        video = self.videos.find_one({'name': name})
+    def get_video(self, file_id: str) -> Video:
+        video = self.videos.find_one({'_id': file_id})
         if video is None:
-            raise VideoNotFoundError(name=name)
-        return Video(name=video['name'], content=video['content'])
+            raise VideoNotFoundError(file_id=file_id)
+        return Video(file_id=video['_id'], name=video['name'], size=video['size'],
+                     content=video['content'], content_type=video['content_type'],
+                     created_at=video['created_at'])
