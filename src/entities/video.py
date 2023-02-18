@@ -1,8 +1,6 @@
 from datetime import datetime
 from enum import Enum
 
-from .errors.common import TypeNotSupportedError
-
 
 class VideoType(Enum):
     MP4 = 'mp4'
@@ -11,10 +9,7 @@ class VideoType(Enum):
 
     @classmethod
     def from_name(cls, name: str):
-        try:
-            return cls[name.upper()]
-        except KeyError:
-            raise TypeNotSupportedError(name)
+        return cls[name.upper()]
 
 
 class Video():
