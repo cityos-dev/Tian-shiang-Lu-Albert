@@ -28,11 +28,17 @@ class VideoRepository:
                       created_at=video['created_at']) for video in videos]
 
     def delete_video(self, file_id: str):
+        if len(file_id) != 24:
+            raise VideoNotFoundError(file_id=file_id)
+
         result = self.videos.delete_one({'_id': ObjectId(file_id)})
         if result.deleted_count == 0:
             raise VideoNotFoundError(file_id=file_id)
 
     def get_video(self, file_id: str) -> Video:
+        if len(file_id) != 24:
+            raise VideoNotFoundError(file_id=file_id)
+
         video = self.videos.find_one({'_id': ObjectId(file_id)})
         if video is None:
             raise VideoNotFoundError(file_id=file_id)
