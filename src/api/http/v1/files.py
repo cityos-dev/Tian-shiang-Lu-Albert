@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response
 from http import HTTPStatus
 
-from entities.video import VideoType
+from entities.video import VideoType, Video
 from repository import video_repository as video_repo
 from repository.errors import VideoExistsError, VideoNotFoundError
 
@@ -14,12 +14,15 @@ def get_file(fileid):
     try:
         video = video_repo.get_video(fileid)
         response = make_response(video.content)
-        content_type = to_content_type(video.video_type)
+        content_type = get_content_type(video)
         if content_type is None:
             return '', HTTPStatus.INTERNAL_SERVER_ERROR
 
-        response.headers['Content-Type'] = to_content_type(video.video_type)
-        return video.content
+        response.headers = {
+            'Content-Type': get_content_type(video),
+            'Content-Disposition': 'attachment; filename='.format(video.name)
+        }
+        return response
     except VideoNotFoundError as err:
         return '', HTTPStatus.NOT_FOUND
 
