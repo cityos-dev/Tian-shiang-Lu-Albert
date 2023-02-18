@@ -49,6 +49,10 @@ def delete_file(fileid):
 def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
+
+    if data not in files:
+        return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+
     file = request.files['data']
     content = file.read()
     if len(content) == 0:
