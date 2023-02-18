@@ -12,18 +12,18 @@ class VideoRepository:
     def __init__(self, client: MongoClient):
         self.videos = client.db.videos
 
-    def create_video(self, name: str, content: bin, content_type: VideoType):
+    def create_video(self, name: str, content: bin, video_type: VideoType):
         created_at = datetime.utcnow()
         size = len(content)
-        result = self.videos.insert_one({'name': name, 'content': content, 'content_type': content_type.name,
+        result = self.videos.insert_one({'name': name, 'content': content, 'video_type': video_type.name,
                                          'size': size, 'created_at': created_at})
         return Video(file_id=result.inserted_id, name=name, content=content,
-                     size=size, content_type=content_type, created_at=created_at)
+                     size=size, video_type=video_type, created_at=created_at)
 
     def list_videos(self):
         videos = self.videos.find()
         return [Video(file_id=video['_id'], name=video['name'], size=video['size'],
-                      content=video['content'], content_type=VideoType.from_name(video['content_type']),
+                      content=video['content'], video_type=VideoType.from_name(video['video_type']),
                       created_at=video['created_at']) for video in videos]
 
     def delete_video(self, file_id: str):
@@ -36,5 +36,5 @@ class VideoRepository:
         if video is None:
             raise VideoNotFoundError(file_id=file_id)
         return Video(file_id=video['_id'], name=video['name'], size=video['size'],
-                     content=video['content'], content_type=VideoType.from_name(video['content_type']),
+                     content=video['content'], video_type=VideoType.from_name(video['video_type']),
                      created_at=video['created_at'])
