@@ -50,12 +50,16 @@ def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
     file = request.files['data']
+    content = file.read()
+    if len(content) == 0:
+        return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+
     name = file.filename
     video_type = VideoType.from_name(name)
     if video_type is None:
         return '', HTTPStatus.BAD_REQUEST
 
-    video = video_repo.create_video(name=name, content=file.read(), video_type=video_type)
+    video = video_repo.create_video(name=name, content=content, video_type=video_type)
     response = make_response('', HTTPStatus.CREATED)
     # TODO this code must be orginized with a conbination of real domain and port
     location = 'http://0.0.0.0:8080/v1/files/{}'.format(video.file_id)
