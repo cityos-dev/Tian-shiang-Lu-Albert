@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
 from http import HTTPStatus
 
 from entities.video import VideoType
@@ -32,13 +32,15 @@ def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
     content_type = request.headers['Content-Type']
-    file = request.files['file']
+    file = request.files['data']
     video_type = get_video_type(content_type)
     if video_type is None:
         return '', HTTPStatus.BAD_REQUEST
 
     video = video_repo.create_video(name=file.filename, content=file.read(), video_type=video_type)
-    return {'Location': video.file_id}, HTTPStatus.CREATED
+    response = make_response('', HTTPStatus.CREATED)
+    response.headers = {'Location': video.file_id}
+    return response
 
 
 def get_video_type(content_type: str):
