@@ -9,7 +9,10 @@ class VideoType(Enum):
     @classmethod
     def from_name(cls, name: str):
         extension = name.split('.')[-1]
-        return cls[name.upper()]
+        try:
+            return cls[extension.upper()]
+        except KeyError:
+            return None
 
 
 class Video():
