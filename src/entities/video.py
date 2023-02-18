@@ -5,10 +5,10 @@ from enum import Enum
 class VideoType(Enum):
     MP4 = 'mp4'
     MPG = 'mpg'
-    STREAM = 'stream'
 
     @classmethod
     def from_name(cls, name: str):
+        extension = name.split('.')[-1]
         return cls[name.upper()]
 
 

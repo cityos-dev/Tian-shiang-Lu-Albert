@@ -94,7 +94,7 @@ def test_get_video(mock_client, mocker):
     repo = VideoRepository(mock_client)
     created_at = datetime.utcnow()
     expected_video = {'_id': ObjectId('63f0c5b14f447e928ba3e6af'), 'name': 'video1', 'size': 7, 'content': b'1111111',
-                      'video_type': VideoType.STREAM.name, 'created_at': created_at}
+                      'video_type': VideoType.MP4.name, 'created_at': created_at}
     mock_client.db.videos.find_one = mocker.Mock(return_value=expected_video)
 
     video = repo.get_video('63f0c5b14f447e928ba3e6af')

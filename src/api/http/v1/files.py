@@ -13,9 +13,18 @@ def get_file(fileid):
     print('list file')
     try:
         video = video_repo.get_video(fileid)
+        response = make_response(video.content)
+        response.headers['Content-Type'] = to_content_type(video.video_type)
         return video.content
     except VideoNotFoundError as err:
         return '', HTTPStatus.NOT_FOUND
+
+
+def to_content_type(video_type: VideoType):
+    if video_type == VideoType.MP4:
+        return 'video/mp4'
+    elif video_type == VideoType.MPG:
+        return 'video/mpeg'
 
 
 @routes.delete('/files/<fileid>')
@@ -32,7 +41,12 @@ def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
     file = request.files['data']
-    video = video_repo.create_video(name=file.filename, content=file.read(), video_type=video_type)
+    name = file.filename
+    video_type = VideoType.from_name(name)
+    if video_type is None:
+        return '', HTTPStatus.BAD_REQUEST
+
+    video = video_repo.create_video(name=name, content=file.read(), video_type=video_type)
     response = make_response('', HTTPStatus.CREATED)
     # TODO this code must be orginized with a conbination of real domain and port
     location = 'http://0.0.0.0:8080/v1/files/{}'.format(video.file_id)
