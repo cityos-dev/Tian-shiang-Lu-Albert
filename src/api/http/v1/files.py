@@ -50,7 +50,7 @@ def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
 
-    if data not in files:
+    if 'data' not in request.files:
         return '', HTTPStatus.UNSUPPORTED_MEDIA_TYPE
 
     file = request.files['data']
