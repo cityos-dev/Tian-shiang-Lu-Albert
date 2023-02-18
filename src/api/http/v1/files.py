@@ -58,5 +58,6 @@ def get_video_type(content_type: str):
 def list_files():
     print('list file')
     videos = video_repo.list_videos()
-    return [{'fileid': video.file_id, 'name': video.name, 'size': video.size, created_at: video.created_at}
+    return [{'fileid': video.file_id, 'name': video.name,
+             'size': video.size, 'created_at': video.created_at}
             for video in videos]
