@@ -1,7 +1,7 @@
 from flask import Flask
 from pymongo import MongoClient
 
-from api.http import health, files
+from api.http.v1 import health, files
 
 app = Flask(__name__)
 
