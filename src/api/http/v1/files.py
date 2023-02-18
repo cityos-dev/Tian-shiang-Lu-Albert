@@ -31,15 +31,17 @@ def delete_file(fileid):
 def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
-    content_type = request.headers['Content-Type']
     file = request.files['data']
+    content_type = request.headers['Content-Type']
     video_type = get_video_type(content_type)
     if video_type is None:
         return '', HTTPStatus.BAD_REQUEST
 
     video = video_repo.create_video(name=file.filename, content=file.read(), video_type=video_type)
     response = make_response('', HTTPStatus.CREATED)
-    response.headers = {'Location': video.file_id}
+    # TODO this code must be orginized with a conbination of real domain and port
+    location = 'http://0.0.0.0:8080/v1/files/{}'.format(video.file_id)
+    response.headers = {'Location': location}
     return response
 
 
