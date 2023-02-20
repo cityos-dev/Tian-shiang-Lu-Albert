@@ -6,10 +6,10 @@ from entities.video import VideoType, Video
 from repositories import video_repository as video_repo
 from repositories.errors import VideoExistsError, VideoNotFoundError
 
-routes = Blueprint('v1_files', __name__, url_prefix='/v1')
+routes = Blueprint('v1_files', __name__, url_prefix='/v1/files')
 
 
-@routes.get('/files/<fileid>')
+@routes.get('/<fileid>')
 def get_file(fileid):
     print('list file')
     try:
@@ -37,7 +37,7 @@ def get_content_type(video: Video):
     return None
 
 
-@routes.delete('/files/<fileid>')
+@routes.delete('/<fileid>')
 def delete_file(fileid):
     try:
         video_repo.delete_video(fileid)
@@ -46,7 +46,7 @@ def delete_file(fileid):
         return '', HTTPStatus.NOT_FOUND
 
 
-@routes.post('/files')
+@routes.post('')
 def upload_file():
     if 'Content-Type' not in request.headers:
         return '', HTTPStatus.BAD_REQUEST
@@ -73,7 +73,7 @@ def upload_file():
     return response
 
 
-@routes.get('/files')
+@routes.get('')
 def list_files():
     print('list file')
     videos = video_repo.list_videos()
