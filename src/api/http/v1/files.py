@@ -1,6 +1,7 @@
 from flask import Blueprint, request, make_response
 from http import HTTPStatus
 
+from setting import server
 from entities.video import VideoType, Video
 from repository import video_repository as video_repo
 from repository.errors import VideoExistsError, VideoNotFoundError
@@ -65,8 +66,9 @@ def upload_file():
 
     video = video_repo.create_video(name=name, content=content, video_type=video_type)
     response = make_response('', HTTPStatus.CREATED)
-    # TODO this code must be orginized with a conbination of real domain and port
-    location = 'http://0.0.0.0:8080/v1/files/{}'.format(video.file_id)
+    location = 'http://{0}:{1}/v1/files/{2}'.format(server['domain'],
+                                                    server['port'],
+                                                    video.file_id)
     response.headers = {'Location': location}
     return response
 
