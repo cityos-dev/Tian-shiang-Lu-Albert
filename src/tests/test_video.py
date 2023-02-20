@@ -36,8 +36,6 @@ def test_create_video(mock_client, mocker):
     name = 'video'
     content = b'content'
     video_type = VideoType.MP4
-    object_id = '63f0c5b14f447e928ba3e6af'
-    mock_client.db.videos.insert_one.return_value = MockDBResult(inserted_count=1, inserted_id=object_id)
 
     video = repo.create_video(name=name, content=content, video_type=video_type)
 
@@ -45,7 +43,6 @@ def test_create_video(mock_client, mocker):
     assert isinstance(video, Video)
     assert video.content == content
     assert video.name == name
-    assert video.file_id == str(object_id)
     assert video.video_type == video_type
 
 

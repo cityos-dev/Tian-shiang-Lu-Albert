@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from pymongo import MongoClient
 from bson import ObjectId
+from pymongo import MongoClient
 
 from entities import Video
 from entities.video import VideoType
@@ -16,10 +16,12 @@ class VideoRepository:
     def create_video(self, name: str, content: bin, video_type: VideoType):
         created_at = datetime.utcnow()
         size = len(content)
-        result = self.videos.insert_one({'name': name, 'content': content, 'video_type': video_type.name,
-                                         'size': size, 'created_at': created_at})
-        return Video(file_id=str(result.inserted_id), name=name, content=content,
-                     size=size, video_type=video_type, created_at=created_at)
+        video = Video(file_id=ObjectId(), name=name, content=content, size=size,
+                      video_type=video_type, created_at=created_at)
+        self.videos.insert_one({'_id': video.file_id, 'name': video.name,
+                                'content': video.content, 'video_type': video.video_type.name,
+                                'size': video.size, 'created_at': video.created_at})
+        return video
 
     def list_videos(self):
         videos = self.videos.find()
