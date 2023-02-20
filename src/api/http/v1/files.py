@@ -3,8 +3,8 @@ from http import HTTPStatus
 
 from setting import server
 from entities.video import VideoType, Video
-from repository import video_repository as video_repo
-from repository.errors import VideoExistsError, VideoNotFoundError
+from repositories import video_repository as video_repo
+from repositories.errors import VideoExistsError, VideoNotFoundError
 
 routes = Blueprint('v1_files', __name__, url_prefix='/v1')
 

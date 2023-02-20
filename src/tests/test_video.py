@@ -12,8 +12,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from entities import Video
 from entities.video import VideoType
-from repository import VideoRepository
-from repository.errors import VideoNotFoundError, VideoExistsError
+from repositories import VideoRepository
+from repositories.errors import VideoNotFoundError, VideoExistsError
 
 
 class MockDBResult():
