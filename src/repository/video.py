@@ -9,6 +9,7 @@ from .errors import VideoExistsError, VideoNotFoundError
 
 
 class VideoRepository:
+    # TODO catch database errors such as connection error
 
     def __init__(self, client: MongoClient):
         self.videos = client.db.videos
