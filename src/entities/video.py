@@ -16,6 +16,8 @@ class VideoType(Enum):
 
 
 class Video():
+    # TODO add restrictions such as file size and naming constraints
+
     def __init__(self, file_id: str, name: str, content: bin, size: int,
                  video_type: VideoType, created_at: datetime):
         self.file_id = file_id
