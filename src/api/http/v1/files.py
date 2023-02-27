@@ -10,7 +10,7 @@ routes = Blueprint('v1_files', __name__, url_prefix='/v1/files')
 
 
 @routes.get('/<fileid>')
-def get_file(fileid):
+def get_file(fileid: str):
     print('list file')
     try:
         video = video_repo.get_video(fileid)
@@ -38,7 +38,7 @@ def get_content_type(video: Video):
 
 
 @routes.delete('/<fileid>')
-def delete_file(fileid):
+def delete_file(fileid: str):
     try:
         video_repo.delete_video(fileid)
         return '', HTTPStatus.NO_CONTENT
